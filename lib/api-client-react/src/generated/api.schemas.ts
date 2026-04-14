@@ -8,3 +8,17 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface Task {
+  id: string;
+  title: string;
+  createdAt: string;
+}
+
+export interface CreateTaskBody {
+  title: string;
+}
+
+export interface ErrorResponse {
+  error: string;
+}

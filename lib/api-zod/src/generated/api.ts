@@ -14,3 +14,22 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Returns all to-do tasks from the database
+ * @summary Get all tasks
+ */
+export const GetTasksResponseItem = zod.object({
+  id: zod.string(),
+  title: zod.string(),
+  createdAt: zod.string(),
+});
+export const GetTasksResponse = zod.array(GetTasksResponseItem);
+
+/**
+ * Creates a new to-do task and saves it to the database
+ * @summary Add a new task
+ */
+export const AddTaskBody = zod.object({
+  title: zod.string(),
+});
