@@ -8,7 +8,6 @@
 import * as zod from "zod";
 
 /**
- * Returns server health status
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
@@ -16,8 +15,37 @@ export const HealthCheckResponse = zod.object({
 });
 
 /**
- * Returns all to-do tasks from the database
- * @summary Get all tasks
+ * @summary Register a new user
+ */
+export const SignupBody = zod.object({
+  name: zod.string(),
+  email: zod.string(),
+  password: zod.string(),
+});
+
+export const SignupResponse = zod.object({
+  message: zod.string(),
+});
+
+/**
+ * @summary Log in and receive a JWT token
+ */
+export const LoginBody = zod.object({
+  email: zod.string(),
+  password: zod.string(),
+});
+
+export const LoginResponse = zod.object({
+  token: zod.string(),
+  user: zod.object({
+    id: zod.string(),
+    name: zod.string(),
+    email: zod.string(),
+  }),
+});
+
+/**
+ * @summary Get all tasks for the logged-in user
  */
 export const GetTasksResponseItem = zod.object({
   id: zod.string(),
@@ -27,9 +55,19 @@ export const GetTasksResponseItem = zod.object({
 export const GetTasksResponse = zod.array(GetTasksResponseItem);
 
 /**
- * Creates a new to-do task and saves it to the database
  * @summary Add a new task
  */
 export const AddTaskBody = zod.object({
   title: zod.string(),
+});
+
+/**
+ * @summary Delete a task
+ */
+export const DeleteTaskParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeleteTaskResponse = zod.object({
+  success: zod.boolean(),
 });

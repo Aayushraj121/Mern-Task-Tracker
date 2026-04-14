@@ -19,6 +19,36 @@ export interface CreateTaskBody {
   title: string;
 }
 
+export interface SignupBody {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginBody {
+  email: string;
+  password: string;
+}
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  user: UserProfile;
+}
+
+export interface MessageResponse {
+  message: string;
+}
+
+export interface SuccessResponse {
+  success: boolean;
+}
+
 export interface ErrorResponse {
   error: string;
 }

@@ -20,6 +20,11 @@ import type {
   CreateTaskBody,
   ErrorResponse,
   HealthStatus,
+  LoginBody,
+  LoginResponse,
+  MessageResponse,
+  SignupBody,
+  SuccessResponse,
   Task,
 } from "./api.schemas";
 
@@ -33,7 +38,6 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 /**
- * Returns server health status
  * @summary Health check
  */
 export const getHealthCheckUrl = () => {
@@ -109,8 +113,179 @@ export function useHealthCheck<
 }
 
 /**
- * Returns all to-do tasks from the database
- * @summary Get all tasks
+ * @summary Register a new user
+ */
+export const getSignupUrl = () => {
+  return `/api/auth/signup`;
+};
+
+export const signup = async (
+  signupBody: SignupBody,
+  options?: RequestInit,
+): Promise<MessageResponse> => {
+  return customFetch<MessageResponse>(getSignupUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(signupBody),
+  });
+};
+
+export const getSignupMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof signup>>,
+    TError,
+    { data: BodyType<SignupBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof signup>>,
+  TError,
+  { data: BodyType<SignupBody> },
+  TContext
+> => {
+  const mutationKey = ["signup"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof signup>>,
+    { data: BodyType<SignupBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return signup(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SignupMutationResult = NonNullable<
+  Awaited<ReturnType<typeof signup>>
+>;
+export type SignupMutationBody = BodyType<SignupBody>;
+export type SignupMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Register a new user
+ */
+export const useSignup = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof signup>>,
+    TError,
+    { data: BodyType<SignupBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof signup>>,
+  TError,
+  { data: BodyType<SignupBody> },
+  TContext
+> => {
+  return useMutation(getSignupMutationOptions(options));
+};
+
+/**
+ * @summary Log in and receive a JWT token
+ */
+export const getLoginUrl = () => {
+  return `/api/auth/login`;
+};
+
+export const login = async (
+  loginBody: LoginBody,
+  options?: RequestInit,
+): Promise<LoginResponse> => {
+  return customFetch<LoginResponse>(getLoginUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(loginBody),
+  });
+};
+
+export const getLoginMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof login>>,
+    TError,
+    { data: BodyType<LoginBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof login>>,
+  TError,
+  { data: BodyType<LoginBody> },
+  TContext
+> => {
+  const mutationKey = ["login"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof login>>,
+    { data: BodyType<LoginBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return login(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type LoginMutationResult = NonNullable<
+  Awaited<ReturnType<typeof login>>
+>;
+export type LoginMutationBody = BodyType<LoginBody>;
+export type LoginMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Log in and receive a JWT token
+ */
+export const useLogin = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof login>>,
+    TError,
+    { data: BodyType<LoginBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof login>>,
+  TError,
+  { data: BodyType<LoginBody> },
+  TContext
+> => {
+  return useMutation(getLoginMutationOptions(options));
+};
+
+/**
+ * @summary Get all tasks for the logged-in user
  */
 export const getGetTasksUrl = () => {
   return `/api/tasks`;
@@ -129,7 +304,7 @@ export const getGetTasksQueryKey = () => {
 
 export const getGetTasksQueryOptions = <
   TData = Awaited<ReturnType<typeof getTasks>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(options?: {
   query?: UseQueryOptions<Awaited<ReturnType<typeof getTasks>>, TError, TData>;
   request?: SecondParameter<typeof customFetch>;
@@ -152,15 +327,15 @@ export const getGetTasksQueryOptions = <
 export type GetTasksQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTasks>>
 >;
-export type GetTasksQueryError = ErrorType<unknown>;
+export type GetTasksQueryError = ErrorType<void>;
 
 /**
- * @summary Get all tasks
+ * @summary Get all tasks for the logged-in user
  */
 
 export function useGetTasks<
   TData = Awaited<ReturnType<typeof getTasks>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<void>,
 >(options?: {
   query?: UseQueryOptions<Awaited<ReturnType<typeof getTasks>>, TError, TData>;
   request?: SecondParameter<typeof customFetch>;
@@ -175,7 +350,6 @@ export function useGetTasks<
 }
 
 /**
- * Creates a new to-do task and saves it to the database
  * @summary Add a new task
  */
 export const getAddTaskUrl = () => {
@@ -195,7 +369,7 @@ export const addTask = async (
 };
 
 export const getAddTaskMutationOptions = <
-  TError = ErrorType<ErrorResponse>,
+  TError = ErrorType<ErrorResponse | void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -236,13 +410,13 @@ export type AddTaskMutationResult = NonNullable<
   Awaited<ReturnType<typeof addTask>>
 >;
 export type AddTaskMutationBody = BodyType<CreateTaskBody>;
-export type AddTaskMutationError = ErrorType<ErrorResponse>;
+export type AddTaskMutationError = ErrorType<ErrorResponse | void>;
 
 /**
  * @summary Add a new task
  */
 export const useAddTask = <
-  TError = ErrorType<ErrorResponse>,
+  TError = ErrorType<ErrorResponse | void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -259,4 +433,88 @@ export const useAddTask = <
   TContext
 > => {
   return useMutation(getAddTaskMutationOptions(options));
+};
+
+/**
+ * @summary Delete a task
+ */
+export const getDeleteTaskUrl = (id: string) => {
+  return `/api/tasks/${id}`;
+};
+
+export const deleteTask = async (
+  id: string,
+  options?: RequestInit,
+): Promise<SuccessResponse> => {
+  return customFetch<SuccessResponse>(getDeleteTaskUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteTaskMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["deleteTask"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteTask>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteTask(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteTask>>
+>;
+
+export type DeleteTaskMutationError = ErrorType<void>;
+
+/**
+ * @summary Delete a task
+ */
+export const useDeleteTask = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteTask>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteTask>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getDeleteTaskMutationOptions(options));
 };
