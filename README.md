@@ -1,125 +1,170 @@
-# MERN To-Do List App
+# 🚀 MERN Task Tracker
 
-A full-stack To-Do List application built with the **MERN stack** (MongoDB, Express, React, Node.js) and **JWT authentication**. Users can sign up, log in, and manage their personal tasks.
+<p align="center">
+  <b>Full-Stack Task Management App with Secure Authentication 🔐</b><br/>
+  Built using MERN Stack + JWT + Modern UI
+</p>
 
-> Built as part of the Web Development Internship — Task 2
-
----
-
-## Live Demo
-
-**App URL:** _Add your Replit deployment link here after publishing_
-
----
-
-## Features
-
-- **User Authentication** — Sign up and log in with email and password
-- **JWT-based Security** — Tokens stored in `localStorage` and sent with every API request
-- **Password Hashing** — Passwords encrypted with `bcryptjs` before saving
-- **Personal Tasks** — Each user only sees their own tasks (scoped by `userId`)
-- **Add / Delete Tasks** — Clean, simple task management
-- **MongoDB Atlas** — Cloud database for storing users and tasks
-- **Responsive UI** — Works on mobile and desktop
+<p align="center">
+  <img src="https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Backend-Node.js-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Database-MongoDB-darkgreen?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Auth-JWT-orange?style=for-the-badge" />
+</p>
 
 ---
 
-## Tech Stack
+## 🌐 Live Demo
 
-### Frontend
-- **React** + **TypeScript**
-- **Vite** (build tool)
-- **TanStack Query** (data fetching)
-- **Wouter** (routing)
-- **Tailwind CSS** + **shadcn/ui** (styling)
-- **Framer Motion** (animations)
-
-### Backend
-- **Node.js** + **Express**
-- **MongoDB Atlas** + **Mongoose**
-- **JWT** (`jsonwebtoken`) for authentication
-- **bcryptjs** for password hashing
-- **Zod** for input validation
+🔗 https://mern-task-tracker--friendly89018.replit.app
 
 ---
 
-## API Endpoints
+## 🎥 Demo Preview
 
-### Authentication
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/signup` | Create a new user account |
-| POST | `/api/auth/login` | Log in and get JWT token |
+👉 Add your screen recording here (use Loom / ScreenRec)
 
-### Tasks (Protected — requires JWT)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/tasks` | Get all tasks for the logged-in user |
-| POST | `/api/tasks` | Add a new task |
-| DELETE | `/api/tasks/:id` | Delete a task |
-
-All `/api/tasks` requests require an `Authorization: Bearer <token>` header.
-
----
-
-## How It Works
-
-1. **Sign up** → User registers with name, email, password (password is hashed)
-2. **Log in** → Server verifies credentials and returns a JWT token
-3. **Token saved** → Frontend stores token in `localStorage`
-4. **Auto-attach** → Every API call automatically sends the token in headers
-5. **Protected routes** → Backend middleware verifies the token before allowing access
-
----
-
-## Environment Variables
-
-Set these in your environment (Replit Secrets or `.env`):
-
+```id="eaf0ep"
+![Demo](your-demo-gif-link)
 ```
-MONGODB_URI=your_mongodb_atlas_connection_string
-JWT_SECRET=your_jwt_secret_key
+
+---
+
+## 📸 Screenshots
+
+### 🔐 Login Page
+
+```id="8ym0q8"
+![Login](your-login-screenshot)
+```
+
+### 📝 Dashboard
+
+```id="mb1fhq"
+![Dashboard](your-dashboard-screenshot)
+```
+
+### ➕ Add Task
+
+```id="r3qtcy"
+![Add Task](your-add-task-screenshot)
+```
+
+---
+
+## ✨ Features
+
+* 🔐 Secure Authentication (Signup/Login)
+* 🛡️ JWT Protected Routes
+* 🔑 Password Hashing (bcrypt)
+* 👤 User-specific Tasks
+* ➕ Add Tasks
+* ❌ Delete Tasks
+* ⚡ Fast API with Express
+* ☁️ MongoDB Atlas Integration
+* 📱 Fully Responsive UI
+
+---
+
+## 🧰 Tech Stack
+
+### ⚛️ Frontend
+
+* React + TypeScript
+* Vite
+* TanStack Query
+* Wouter
+* Tailwind CSS + shadcn/ui
+* Framer Motion
+
+### 🟢 Backend
+
+* Node.js + Express
+* MongoDB Atlas + Mongoose
+* JWT Authentication
+* bcryptjs
+* Zod Validation
+
+---
+
+## 📡 API Endpoints
+
+### 🔐 Authentication
+
+| Method | Endpoint         | Description       |
+| ------ | ---------------- | ----------------- |
+| POST   | /api/auth/signup | Register user     |
+| POST   | /api/auth/login  | Login & get token |
+
+---
+
+### 📋 Tasks (Protected)
+
+| Method | Endpoint       | Description    |
+| ------ | -------------- | -------------- |
+| GET    | /api/tasks     | Get user tasks |
+| POST   | /api/tasks     | Add new task   |
+| DELETE | /api/tasks/:id | Delete task    |
+
+📌 Requires:
+Authorization → `Bearer <token>`
+
+---
+
+## ⚙️ Environment Variables
+
+```id="5ptnn2"
+MONGODB_URI=your_mongodb_connection
+JWT_SECRET=your_secret_key
 SESSION_SECRET=your_session_secret
 ```
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
-```
-.
-├── artifacts/
-│   ├── api-server/         # Express backend
-│   │   └── src/
-│   │       ├── models/     # Mongoose schemas (User, Task)
-│   │       ├── routes/     # auth.ts, tasks.ts
-│   │       ├── middlewares/# JWT auth middleware
-│   │       └── lib/        # MongoDB connection
-│   └── todo-app/           # React frontend
-│       └── src/
-│           ├── pages/      # login, signup, home
-│           └── App.tsx     # Routes + auth setup
-└── lib/
-    └── api-spec/           # OpenAPI contract
+```id="pdwz0j"
+artifacts/
+ ├── api-server/
+ └── todo-app/
+
+lib/
+ └── api-spec/
 ```
 
 ---
 
-## Run Locally
+## ▶️ Run Locally
 
-```bash
-# Install dependencies
+```bash id="wrdt4o"
 pnpm install
-
-# Start the backend
 pnpm --filter @workspace/api-server run dev
-
-# Start the frontend
 pnpm --filter @workspace/todo-app run dev
 ```
 
 ---
 
-## Author
+## 🧠 What I Learned
 
-**Aayush** — Web Development Internship Task 2
+* Full-stack architecture (Frontend ↔ Backend ↔ DB)
+* Authentication using JWT
+* Secure password handling
+* API integration with React
+* State management with TanStack Query
+
+---
+
+## 👨‍💻 Author
+
+**Aayush**
+🎓 Web Development Internship – Task 2
+
+---
+
+## ⭐ Support
+
+If you found this project helpful:
+👉 Give it a ⭐ on GitHub
+👉 Share with others
+
+---
